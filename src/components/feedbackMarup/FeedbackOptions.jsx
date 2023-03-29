@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import css from 'components/feedbackMarup/FeedbackOptions.module.css';
 
 export const FeedbackOptions = ({ options, onLeaveFeedback }) => {
+  console.log('options', options);
   return (
     <ul className={css.item}>
       {options.map(option => (

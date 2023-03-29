@@ -1,52 +1,51 @@
-import { FeedbackOptions } from "./feedbackMarup/FeedbackOptions"
-import { Statistics } from "./feedbackMarup/Statistics" 
-import { Section } from "./feedbackMarup/Section" 
-import { Notification } from "./feedbackMarup/Notification"
-import { Component } from "react"
+import { FeedbackOptions } from './feedbackMarup/FeedbackOptions';
+import { Statistics } from './feedbackMarup/Statistics';
+import { Section } from './feedbackMarup/Section';
+import { Notification } from './feedbackMarup/Notification';
+import { useState } from 'react';
 
-export class App extends Component{
+export const App = () => {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
- state = {
-        good: 0,
-        neutral: 0,
-        bad: 0
-    }
+  const options = ['good', 'neutral', 'bad'];
 
-  handleClickFeedback = (evt) => {
-    if (evt.target.innerHTML === "good") this.setState((prevState) => ({ good: prevState.good + 1 }))
-    else if (evt.target.innerHTML === "neutral") this.setState((prevState) => ({ neutral: prevState.neutral + 1 }))
-    else if (evt.target.innerHTML === "bad") this.setState((prevState) => ({ bad: prevState.bad + 1 }))
-  }
-  
-    countTotalFeedback = () => { 
-        const {good, neutral, bad} = this.state
-        return good+neutral+bad
-    }
-    
-    countPositiveFeedbackPercentage = () => {
-        const {good, neutral, bad} = this.state
-        if (good || neutral || bad) {
-            return ((good / (good + neutral + bad)) * 100).toFixed() + "%"
-        }
-    }
+  const handleClickFeedback = evt => {
+    if (evt.target.innerHTML === 'good') setGood(good + 1);
+    else if (evt.target.innerHTML === 'neutral') setNeutral(neutral + 1);
+    else if (evt.target.innerHTML === 'bad') setBad(bad + 1);
+  };
 
-  render() {
-        const {good, neutral, bad} = this.state
-        return ( <div>
-        <Section title='Please leave feedback'>
+  const countTotalFeedback = () => {
+    return good + neutral + bad;
+  };
+
+  const countPositiveFeedbackPercentage = () => {
+    return ((good / (good + neutral + bad)) * 100).toFixed() + '%';
+  };
+
+  return (
+    <div>
+      <Section title="Please leave feedback">
         <FeedbackOptions
-              options={Object.keys(this.state)}
-              onLeaveFeedback={this.handleClickFeedback} />
-        </Section>
-        <Section title="Statistics">
-            {(good || neutral || bad)
-            ? (<Statistics
+          options={options}
+          onLeaveFeedback={handleClickFeedback}
+        />
+      </Section>
+      <Section title="Statistics">
+        {good || neutral || bad ? (
+          <Statistics
             good={good}
             neutral={neutral}
             bad={bad}
-            total={this.countTotalFeedback()}
-            positivePercentage={this.countPositiveFeedbackPercentage()} />)
-            : (<Notification message="There is no feedback"></Notification>)}
-        </Section></div>)
-    }
+            total={countTotalFeedback()}
+            positivePercentage={countPositiveFeedbackPercentage()}
+          />
+        ) : (
+          <Notification message="There is no feedback"></Notification>
+        )}
+      </Section>
+    </div>
+  );
 };
